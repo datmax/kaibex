@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input {
+  appearance: textfield;
+  align-content: center;
+}
+
+body {
+  font-family: 'Poppins';
+}
+
+.icon {
+  vertical-align: middle;
+  justify-content: right;
+  stroke: blue;
+}
+
+h1 {
+  color: white;
+  animation: flicker 1.5s infinite alternate;
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+    0 0 82px #0fa, 0 0 92px #0fa, 0 0 10px #0fa, 0 0 15px #0fa;
+}
+
+.card {
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #0e5e4c,
+    0 0 0.8rem #0e5e4c, 0 0 0.8rem #0e5e4c, inset 0 0 0.3rem #0e5e4c;
+}
+
+@keyframes flicker {
+  0%,
+  18%,
+  22%,
+  25%,
+  53%,
+  57%,
+  100% {
+    text-shadow: 0 0 4px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 40px #0e5e4c,
+      0 0 10px #0e5e4c, 0 0 10px #0e5e4c, 0 0 10px #0e5e4c, 0 0 15px #0e5e4c;
+  }
+
+  20%,
+  24%,
+  55% {
+    text-shadow: none;
+  }
+}
