@@ -249,7 +249,7 @@ export default function Home() {
           <meta name="description" content="Swap better." />
           <link rel="icon" href="/favicon.ico" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Poppins&displfay=swap"
             rel="stylesheet"
           />
         </Head>
