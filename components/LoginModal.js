@@ -4,7 +4,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 import { connectors } from './Account/config'
 import { useMoralis, useNativeBalance } from 'react-moralis'
-import Image from 'next/image'
 
 const styles = {
   text: {
@@ -91,7 +90,7 @@ export default function LoginModal({ open, onClose, children }) {
                       }
                     }}
                   >
-                    <Image
+                    <img
                       src={icon.src}
                       alt={title}
                       width="30em"
