@@ -1,5 +1,15 @@
 const tokens = [
   {
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    name: 'Ethereum',
+    symbol: 'ETH',
+    decimals: '18',
+    logo: 'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880',
+    logo_hash: null,
+    thumbnail:
+      'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880',
+  },
+  {
     address: '0xf2210f65235c2fb391ab8650520237e6378e5c5a',
     name: 'Kaiba DeFi',
     symbol: 'KAIBA',

@@ -9,6 +9,28 @@ input {
 
 body {
   font-family: 'Poppins';
+  background: hsla(188, 87%, 9%, 1);
+  background: linear-gradient(
+    0deg,
+    hsla(188, 87%, 9%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    0deg,
+    hsla(188, 87%, 9%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    0deg,
+    hsla(188, 87%, 9%, 1) 0%,
+    hsla(0, 0%, 0%, 1) 100%
+  );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#03252A", endColorstr="#000000", GradientType=1 );
+
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#04383F", endColorstr="#000000", GradientType=1 );
 }
 
 .icon {
@@ -27,6 +49,12 @@ h1 {
 .card {
   box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #0e5e4c,
     0 0 0.8rem #0e5e4c, 0 0 0.8rem #0e5e4c, inset 0 0 0.3rem #0e5e4c;
+  border-radius: 20px;
+}
+
+.card-error {
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem coral,
+    0 0 0.8rem coral, 0 0 0.8rem coral, inset 0 0 0.3rem coral;
 }
 
 @keyframes flicker {

@@ -12,14 +12,19 @@ import {
 import { FaArrowDown, FaArrowsAltV, FaEllipsisV } from 'react-icons/fa'
 import Layout from '../components/Layout'
 import Modal from '../components/Modal'
+import Toast from '../components/Toast'
 
 import tokenList from '../web3/tokens'
 import uniswap from '../web3/uniswap'
+import erc20 from '../web3/erc20'
+const bigNumber =
+  '115792089237316195423570985008687907853269984665640564039457584007913129639935'
 
 export default function Home() {
   const {
     Moralis,
     user,
+    account,
     logout,
     authenticate,
     enableWeb3,
@@ -38,6 +43,8 @@ export default function Home() {
     priceFetching,
   } = useTokenPrice()
 
+  const { getBalances } = useNativeBalance()
+
   //TOKENS
   const [tokens, setTokens] = useState(tokenList)
   //INPUT
@@ -55,6 +62,14 @@ export default function Home() {
   const [outputBalance, setOutputBalance] = useState(0)
   const [outputPrice, setOutputPrice] = useState(0)
 
+  const [approved, setApproved] = useState(true)
+
+  const [alert, setAlert] = useState({
+    message: '',
+    type: null,
+    visible: false,
+  })
+
   useEffect(() => {
     const connectorId = window.localStorage.getItem('connectorId')
 
@@ -63,36 +78,71 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled])
 
+  const alertHandler = () => {
+    console.log('hello')
+    setAlert({})
+  }
+
+  const approve = () => {
+    Moralis.executeFunction({
+      abi: erc20,
+      contractAddress: inputToken.address,
+      functionName: 'approve',
+      params: { _spender: uniswap.address, _value: bigNumber },
+    })
+      .then((res) => {
+        setAlert({
+          type: 'success',
+          message: 'Token approved.',
+          visible: true,
+        })
+        setApproved(true)
+      })
+      .catch((err) => {
+        setAlert({
+          type: 'error',
+          message: 'Approve denied by User.',
+          visible: true,
+        })
+      })
+  }
+
   const inputTokenHandler = (token) => {
     console.log('hello')
-    fetchERC20Balances()
-    console.log(token)
-    fetchTokenPrice({
-      params: {
-        address: token.address,
-        chain: 'eth',
-        exchange: 'uniswap-v2',
-      },
-      onSuccess: (price) => {
-        setInputPrice(price.usdPrice)
-      },
-    })
+    if (inputToken != token) {
+      fetchERC20Balances()
+      console.log(token)
+      fetchTokenPrice({
+        params: {
+          address: token.address,
+          chain: 'eth',
+          exchange: 'uniswap-v2',
+        },
+        onSuccess: (price) => {
+          setInputPrice(price.usdPrice)
+        },
+      })
+    }
+
     setInputOpen(false)
     setInputToken(token)
   }
   const outputTokenHandler = (token) => {
+    if (outputToken != token) {
+      fetchERC20Balances()
+      fetchTokenPrice({
+        params: {
+          address: token.address,
+          chain: 'eth',
+          exchange: 'uniswap-v2',
+        },
+        onSuccess: (price) => {
+          setOutputPrice(price.usdPrice)
+        },
+      })
+    }
     setOutputOpen(false)
-    fetchERC20Balances()
-    fetchTokenPrice({
-      params: {
-        address: token.address,
-        chain: 'eth',
-        exchange: 'uniswap-v2',
-      },
-      onSuccess: (price) => {
-        setOutputPrice(price.usdPrice)
-      },
-    })
+
     setOutputToken(token)
   }
 
@@ -104,34 +154,78 @@ export default function Home() {
     setOutput(event.target.value)
   }
 
-  const fetchInputBalance = useEffect(() => {
+  const fetchInputBalance = useMemo(() => {
     let bal = 0
-    data?.filter((token) => {
-      console.log(token, inputToken)
-      console.log(token.token_address, inputToken.address)
-      if (token.token_address == inputToken.address) {
-        bal = token.balance / Math.pow(10, token.decimals)
-      }
-    })
+    if (inputToken.name == 'Ethereum') {
+      getBalances({
+        onSuccess: (balance) => {
+          bal = balance.balance / Math.pow(10, 18)
+          setInputBalance(bal.toFixed(3))
+        },
+
+        onError: (error) => {
+          console.error('CULO')
+        },
+      })
+    } else
+      data?.filter((token) => {
+        if (token.name == 'Ethereum') {
+        } else if (token.token_address == inputToken.address) {
+          bal = token.balance / Math.pow(10, token.decimals)
+        }
+      })
     setInputBalance(bal.toFixed(3))
   }, [data, inputToken])
 
-  const fetchOutputBalance = useEffect(() => {
+  const fetchOutputBalance = useMemo(() => {
     let bal = 0
-    data?.filter((token) => {
-      console.log(token, inputToken)
-      console.log(token.token_address, outputToken.address)
-      if (token.token_address == outputToken.address) {
-        bal = token.balance / Math.pow(10, token.decimals)
-      }
-    })
+
+    if (outputToken.name == 'Ethereum') {
+      getBalances({
+        onSuccess: (balance) => {
+          bal = balance.balance / Math.pow(10, 18)
+          setOutputBalance(bal.toFixed(3))
+        },
+
+        onError: (error) => {
+          console.error('CULO')
+        },
+      })
+    } else
+      data?.filter((token) => {
+        console.log(token, inputToken)
+        console.log(token.token_address, outputToken.address)
+        if (token.token_address == outputToken.address) {
+          bal = token.balance / Math.pow(10, token.decimals)
+        }
+      })
     setOutputBalance(bal.toFixed(3))
   }, [data, outputToken])
 
   const previewOutput = useEffect(() => {
+    if (isWeb3Enabled && inputToken.name != 'Ethereum') {
+      Moralis.Web3API.token
+        .getTokenAllowance({
+          owner_address: account,
+          spender_address: uniswap.address,
+          address: inputToken.address,
+        })
+        .then((res) => {
+          console.log(res)
+          if (res.allowance == '0') {
+            setApproved(false)
+          } else setApproved(true)
+        })
+    }
+
     const timer = setTimeout(() => {
       if (input == '') setOutput('')
-      if (inputToken && outputToken && !outputPreview) {
+      if (
+        inputToken &&
+        outputToken &&
+        !outputPreview &&
+        inputToken != outputToken
+      ) {
         Moralis.Web3API.defi
           .getPairAddress({
             token0_address: inputToken.address,
@@ -167,12 +261,17 @@ export default function Home() {
     return () => {
       clearTimeout(timer)
     }
-  }, [input])
+  }, [input, isWeb3Enabled, inputToken])
 
   const previewInput = useEffect(() => {
     const timer = setTimeout(() => {
       if (output == '') setInput('')
-      if (inputToken && outputToken && !inputPreview) {
+      if (
+        inputToken &&
+        outputToken &&
+        !inputPreview &&
+        inputToken != outputToken
+      ) {
         Moralis.Web3API.defi
           .getPairAddress({
             token0_address: inputToken.address,
@@ -208,7 +307,7 @@ export default function Home() {
     return () => {
       clearTimeout(timer)
     }
-  }, [output])
+  }, [output, outputToken])
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -230,7 +329,7 @@ export default function Home() {
   }, [isWeb3Enabled])
 
   return (
-    <div>
+    <div className=" relative mx-2">
       <Modal
         tokens={tokens}
         open={inputOpen}
@@ -243,7 +342,16 @@ export default function Home() {
         onClose={() => setOutputOpen(false)}
         onChangeToken={outputTokenHandler}
       ></Modal>
-      <div className=" justify-centerbg-black  flex min-h-full flex-col items-center pt-32 align-middle ">
+      {alert?.visible && (
+        <Toast
+          visible={alert.visible}
+          message={alert.message}
+          type={alert.type}
+          close={alertHandler}
+        ></Toast>
+      )}
+
+      <div className=" flex  flex-col items-center justify-center  pt-32 align-middle ">
         <Head>
           <title>LoneSwap</title>
           <meta name="description" content="Swap better." />
@@ -254,26 +362,26 @@ export default function Home() {
           />
         </Head>
 
-        <div className=" card  w-full  rounded-md border-2 bg-transparent px-4 pt-2 pl-4 text-gray-50  sm:w-11/12  md:w-10/12 lg:w-2/3  xl:w-1/3">
+        <div className=" card  w-full  border-2 bg-transparent px-4 pt-2 pl-4 text-gray-50  sm:w-11/12  md:w-10/12 lg:w-2/3  xl:w-1/3">
           <div className="  flex flex-row py-4 pt-4">
             <div className="basis-4/5">
               <p className=" text-2xl">Swap</p>
             </div>
             <div className="basis-1/5">
-              <h1 className="cursor-pointer text-right text-2xl"> ...</h1>
+              <h2 className="cursor-pointer text-right text-2xl"> ...</h2>
             </div>
           </div>
           <div className="flex flex-row">
-            <div className=" basis-3/4 rounded-md border-2 border-cyan-50 bg-inherit">
-              <div className="flex flex-row bg-white">
+            <div className=" basis-3/4 rounded-md  bg-inherit">
+              <div className=" card flex flex-row bg-transparent">
                 <input
-                  className="basis-3/4 py-2 px-2 text-black outline-none"
+                  className=" basis-3/4 bg-transparent py-2 px-2 text-white outline-none "
                   placeholder="0.00"
                   type="number"
                   value={input}
                   onChange={inputChangeHandler}
                 ></input>
-                <button className="   mx-1 my-1 basis-1/4 border-2 border-black bg-inherit text-black">
+                <button className="   mx-1 my-1 basis-1/4  bg-inherit text-gray-500 hover:text-black">
                   {' '}
                   MAX
                 </button>
@@ -281,7 +389,7 @@ export default function Home() {
             </div>
             <div className="w-full basis-1/4 px-2 ">
               <button
-                className=" w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
+                className=" card w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
                 onClick={() => setInputOpen(true)}
               >
                 {inputToken.symbol}
@@ -295,17 +403,17 @@ export default function Home() {
           <div className=" min-w-max items-center justify-center py-4 text-center">
             Invert
           </div>
-          <div className="flex flex-row ">
-            <div className=" basis-3/4 rounded-md border-2 border-cyan-50 bg-inherit">
-              <div className="flex flex-row bg-white">
+          <div className="  flex flex-row ">
+            <div className=" basis-3/4 rounded-md  bg-inherit">
+              <div className="card flex flex-row ">
                 <input
-                  className="basis-3/4 py-2 px-2 text-black outline-none"
+                  className="basis-3/4 bg-inherit py-2   px-2 outline-none "
                   placeholder="0.00"
                   type="number"
                   value={output}
                   onChange={outputChangeHandler}
                 ></input>
-                <button className="   mx-1 my-1 basis-1/4 border-2 border-black bg-inherit text-black">
+                <button className="    mx-1 my-1 basis-1/4  bg-inherit text-gray-500 hover:text-black">
                   {' '}
                   MAX
                 </button>
@@ -313,7 +421,7 @@ export default function Home() {
             </div>
             <div className="w-full basis-1/4 px-2 ">
               <button
-                className=" w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
+                className="card w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
                 onClick={() => {
                   setOutputOpen(true)
                 }}
@@ -329,12 +437,19 @@ export default function Home() {
             <div className="basis-2/4">Balance: {outputBalance}</div>
           </div>
           <div className=" my-4 flex w-auto flex-col justify-center pt-5 ">
-            <button className="mx-10 mt-4 rounded border-2 border-white py-2">
-              Approve
-            </button>
-            <button className="mx-10 mt-4 rounded border-2 border-white py-2">
-              Swap
-            </button>
+            {!approved && (
+              <button
+                className="card mx-10 mt-4 rounded border-2 border-white py-2"
+                onClick={() => approve()}
+              >
+                Approve
+              </button>
+            )}
+            {approved && (
+              <button className="disabled:{!approved} card mx-10 mt-4 rounded border-2 border-white py-2">
+                Swap
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -34,22 +34,32 @@ function User(props) {
 
   const [showLogin, setShowLogin] = useState(false)
   const [balanceData, setBalanceData] = useState(0)
+  const [selected, setSelected] = useState(chainId)
 
   useMemo(() => {
-    console.log(chain)
-  }, [chain, data])
+    isWeb3Enabled && setSelected(Moralis.getChainId())
+  }, [isWeb3Enabled])
 
   return (
     <div>
       {account && (
         <p className="text-white">
-          <span className=" hidden md:block ">
-            {chainId == '0x1' ? (
-              data?.formatted
+          <span className=" mr-4 md:block  ">
+            {selected == '0x1' ? (
+              (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
             ) : (
-              <SwitchToEth change={() => switchNetwork('0x1')}></SwitchToEth>
+              <SwitchToEth
+                change={() =>
+                  switchNetwork('0x1')
+                    .then(() => {
+                      setSelected('0x1')
+                    })
+                    .catch(() => console.log('fanculo'))
+                }
+              ></SwitchToEth>
             )}
-            {account.slice(0, 3) +
+            {' | ' +
+              account.slice(0, 3) +
               '...' +
               account.slice(account.length - 3, account.length)}
           </span>
@@ -57,7 +67,7 @@ function User(props) {
       )}
       {(!isAuthenticated || !account) && (
         <div>
-          <button onClick={() => setShowLogin(true)}>aaa</button>
+          <button onClick={() => setShowLogin(true)}>Connect</button>
           <LoginModal
             open={showLogin}
             onClose={() => setShowLogin(false)}
@@ -82,7 +92,7 @@ export default function Layout({ children }) {
   } = useMoralis()
 
   return (
-    <div className=" min-h-screen min-w-fit bg-black">
+    <div className=" min-h-screen min-w-full ">
       <div className="flex flex-row">
         <div className="basis-10/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>
