@@ -7,7 +7,7 @@ input {
   align-content: center;
 }
 
-body {
+html {
   font-family: 'Poppins';
   background: hsla(188, 87%, 9%, 1);
   background: linear-gradient(

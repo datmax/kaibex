@@ -92,7 +92,7 @@ export default function Layout({ children }) {
   } = useMoralis()
 
   return (
-    <div className=" min-h-screen min-w-full ">
+    <div className=" h-full  w-full ">
       <div className="flex flex-row">
         <div className="basis-10/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>

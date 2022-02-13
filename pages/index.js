@@ -353,7 +353,7 @@ export default function Home() {
 
       <div className=" flex  flex-col items-center justify-center  pt-32 align-middle ">
         <Head>
-          <title>LoneSwap</title>
+          <title>Kaibex</title>
           <meta name="description" content="Swap better." />
           <link rel="icon" href="/favicon.ico" />
           <link
@@ -372,22 +372,19 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-row">
-            <div className=" basis-3/4 rounded-md  bg-inherit">
-              <div className=" card flex flex-row bg-transparent">
-                <input
-                  className=" basis-3/4 bg-transparent py-2 px-2 text-white outline-none "
-                  placeholder="0.00"
-                  type="number"
-                  value={input}
-                  onChange={inputChangeHandler}
-                ></input>
-                <button className="   mx-1 my-1 basis-1/4  bg-inherit text-gray-500 hover:text-black">
-                  {' '}
-                  MAX
-                </button>
-              </div>
+            <div className=" card relative basis-3/4  rounded-md bg-inherit">
+              <input
+                className="w-full bg-transparent py-2 px-2 text-white outline-none "
+                placeholder="0.00"
+                type="number"
+                value={input}
+                onChange={inputChangeHandler}
+              ></input>
+              <button className="   absolute top-1 right-1  mx-1 my-1  bg-inherit text-gray-500 hover:text-black">
+                MAX
+              </button>
             </div>
-            <div className="w-full basis-1/4 px-2 ">
+            <div className=" basis-1/4 px-2 ">
               <button
                 className=" card w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
                 onClick={() => setInputOpen(true)}
@@ -397,29 +394,27 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-row">
-            <div className="basis-2/4">${(inputPrice * input).toFixed(3)}</div>
-            <div className="basis-2/4">Balance: {inputBalance}</div>
+            <div className="basis-3/4">${(inputPrice * input).toFixed(3)}</div>
+            <div className="basis-1/4">Balance: {inputBalance}</div>
           </div>
           <div className=" min-w-max items-center justify-center py-4 text-center">
             Invert
           </div>
           <div className="  flex flex-row ">
-            <div className=" basis-3/4 rounded-md  bg-inherit">
-              <div className="card flex flex-row ">
-                <input
-                  className="basis-3/4 bg-inherit py-2   px-2 outline-none "
-                  placeholder="0.00"
-                  type="number"
-                  value={output}
-                  onChange={outputChangeHandler}
-                ></input>
-                <button className="    mx-1 my-1 basis-1/4  bg-inherit text-gray-500 hover:text-black">
-                  {' '}
-                  MAX
-                </button>
-              </div>
+            <div className=" card relative basis-3/4  rounded-md bg-inherit">
+              <input
+                className="w-full bg-inherit py-2   px-2 outline-none "
+                placeholder="0.00"
+                type="number"
+                value={output}
+                onChange={outputChangeHandler}
+              ></input>
+              <button className="    absolute top-1 right-1  mx-1 my-1  bg-inherit text-gray-500 hover:text-black">
+                {' '}
+                MAX
+              </button>
             </div>
-            <div className="w-full basis-1/4 px-2 ">
+            <div className=" basis-1/4 px-2 ">
               <button
                 className="card w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
                 onClick={() => {
@@ -431,10 +426,10 @@ export default function Home() {
             </div>
           </div>
           <div className="mb-2 flex flex-row">
-            <div className="basis-2/4">
+            <div className="basis-3/4">
               ${(outputPrice * output).toFixed(3)}
             </div>
-            <div className="basis-2/4">Balance: {outputBalance}</div>
+            <div className="basis-1/4 ">Balance: {outputBalance}</div>
           </div>
           <div className=" my-4 flex w-auto flex-col justify-center pt-5 ">
             {!approved && (
