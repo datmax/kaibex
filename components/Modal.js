@@ -32,7 +32,8 @@ export default function Modal({ open, onClose, tokens, onChangeToken, add }) {
 
   const addToken = (token) => {
     setsearch('')
-    add(token)
+    setResult("")
+    onChangeToken(token)
   }
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function Modal({ open, onClose, tokens, onChangeToken, add }) {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className=" inline-block w-full transform overflow-hidden rounded-lg  text-left  shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+            <div className="card-info inline-block w-full transform overflow-hidden rounded-lg  text-left  shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
               <div className="bg-black px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -115,11 +116,11 @@ export default function Modal({ open, onClose, tokens, onChangeToken, add }) {
                     <div className="grid grid-cols-4 gap-2 ">
                       {tokens.map((token) => (
                         <div
-                          className=" card cursor-pointer border-2 py-1 text-center text-white "
-                          onClick={() => onChangeToken(token)}
+                          className=" card flex justify-evenly cursor-pointer border-2 py-1 text-center text-white "
+                          onClick={() => addToken(token)}
                           key={token.symbol}
                         >
-                          {token.symbol}
+                          <img src={token.thumbnail} className="w-8 h-8" ></img> <p className='mt-1'>{token.symbol}</p> 
                         </div>
                       ))}
                     </div>

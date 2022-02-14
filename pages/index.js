@@ -109,7 +109,17 @@ export default function Home() {
   }
 
   const inputTokenHandler = (token) => {
-    console.log('hello')
+    let inTokens = false;
+    tokens.forEach((currentToken) =>{
+      if(token == currentToken) inTokens = true;
+    })
+    if(!inTokens){
+      setTokens(currentList => {
+        return [...currentList, token]
+      });
+    }
+    console.log(tokens)
+    console.log(inTokens);
     if (inputToken != token) {
       fetchERC20Balances()
       console.log(token)
@@ -129,6 +139,15 @@ export default function Home() {
     setInputToken(token)
   }
   const outputTokenHandler = (token) => {
+    let inTokens = false;
+    tokens.forEach((currentToken) =>{
+      if(token == currentToken) inTokens = true;
+    })
+    if(!inTokens){
+      setTokens(currentList => {
+        return [...currentList, token]
+      });
+    }
     if (outputToken != token) {
       fetchERC20Balances()
       fetchTokenPrice({
@@ -211,7 +230,7 @@ export default function Home() {
           setAlert({message: "Transaction Failed.", type: "error", visible: true})
         })
       }
-      else if(inputToken.name ="Ethereum" && outputToken.name !="Ethereum"){
+      else if(inputToken.name !="Ethereum" && outputToken.name !="Ethereum"){
         Moralis.executeFunction({
         
           abi: uniswap.abi,
@@ -318,7 +337,8 @@ export default function Home() {
         inputToken &&
         outputToken &&
         !outputPreview &&
-        inputToken != outputToken
+        inputToken != outputToken && 
+        input > 0 
       ) {
         Moralis.Web3API.defi
           .getPairAddress({
@@ -543,12 +563,12 @@ export default function Home() {
               </button>
             )}
                         { !enough && (
-              <button className="card-error card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
+              <button className="card-error card mx-10 mt-4 rounded border-2 border-white py-2" >
                 Not enough balance.
               </button>
             )}
                                     { swapping && (
-              <button className="card-info card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
+              <button className="card-info card mx-10 mt-4 rounded border-2 border-white py-2">
                 Swapping...
               </button>
             )}

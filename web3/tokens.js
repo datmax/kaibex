@@ -30,7 +30,7 @@ const tokens = [
     "decimals": "9",
     "logo": null,
     "logo_hash": null,
-    "thumbnail": null,
+    "thumbnail": "https://assets.coingecko.com/coins/images/15548/thumb/Klee-Kai-Logo.png?1628258448",
     "block_number": "12415471",
     "validated": 1,
     "created_at": "2022-01-20T10:39:55.818Z"
