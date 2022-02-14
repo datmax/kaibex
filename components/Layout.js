@@ -51,7 +51,7 @@ function User(props) {
                     .then(() => {
                       setSelected('0x1')
                     })
-                    .catch(() => console.log('fanculo'))
+                    .catch(() => console.log('KAIBA FTW'))
                 }
               ></SwitchToEth>
             )}
@@ -92,7 +92,7 @@ export default function Layout({ children }) {
 
   return (
     <div className=" h-screen  w-full relative   ">
-      <div className='absolute text-white bottom-2 w-full text-center'>By <h2 className=' font-bold'>KaibaDefi</h2></div>
+      <div className='absolute text-white bottom-2 w-full text-center hidden'>By <h2 className=' font-bold'>KaibaDefi</h2></div>
       <div className="flex flex-row ">
         <div className="basis-6/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>
@@ -109,7 +109,7 @@ export default function Layout({ children }) {
 
 
       </div>
-      <main>{children}</main>
+      <main className='px-2'>{children}</main>
     </div>
   )
 }

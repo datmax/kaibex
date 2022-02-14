@@ -76,6 +76,15 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled])
 
+  useEffect(() =>{
+    let stored = localStorage.getItem("tokens");
+    if(stored){
+      setTokens(currentList =>{
+        return [...currentList, ...(JSON.parse(stored))]
+      })
+    }
+  },[])
+
   const alertHandler = () => {
     console.log('hello')
     setAlert({visible: false})
@@ -114,6 +123,17 @@ export default function Home() {
       if(token == currentToken) inTokens = true;
     })
     if(!inTokens){
+      console.log("cazzo")
+      let saved = localStorage.getItem("tokens")
+      if(saved != null){
+        saved = JSON.parse(saved)
+        
+        localStorage.setItem("tokens", JSON.stringify([...saved, token]))
+      }
+      else{
+        localStorage.setItem("tokens", JSON.stringify([token]))
+      }
+
       setTokens(currentList => {
         return [...currentList, token]
       });
@@ -388,8 +408,10 @@ export default function Home() {
     }
   }, [input, isWeb3Enabled, inputToken, outputToken?.name])
 
+
+
   const previewInput = useEffect(() => {
-    const timer = setTimeout(() => {
+  const timer = setTimeout(() => {
       if (output == '') setInput('')
       if (
         inputToken &&
