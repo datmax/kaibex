@@ -209,7 +209,7 @@ export default function Home() {
             to: account,
             amountOutMin: 0,
             path: [inputToken.address, outputToken.address],
-            deadline: Date.now() + 30*1000,
+            deadline: Date.now() + 60 * 60 * 3 *1000,
           },
           msgValue: BigInt(input * Math.pow(10, inputToken.decimals))
         }).then((tx) => {
@@ -236,7 +236,7 @@ export default function Home() {
             amountIn: BigInt(input * Math.pow(10, inputToken.decimals)),
             amountOutMin: 0,
             path: [inputToken.address, outputToken.address],
-            deadline: Date.now() + 30*1000,
+            deadline:Date.now() + 60 * 60 * 3 *1000
           },
         }).then((tx) => {
           tx.wait().then((res) =>{
@@ -261,7 +261,7 @@ export default function Home() {
             amountIn: BigInt(input * Math.pow(10, inputToken.decimals)),
             amountOutMin: 0,
             path: [inputToken.address, outputToken.address],
-            deadline: Date.now() + 30*1000,
+            deadline: Date.now() + 60 * 60 * 3 *1000
           },
         }).then((tx) => {
           tx.wait().then((res) =>{
