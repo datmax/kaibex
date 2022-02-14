@@ -40,9 +40,9 @@ function User(props) {
   return (
     <div>
       {account && (
-        <p className="text-white">
+        <p className="text-white pt-2">
         
-            {selected == '0x1' ? (
+            {selected == '0x1' && data?.balance ? (
               (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
             ) : (
               <SwitchToEth
@@ -91,7 +91,8 @@ export default function Layout({ children }) {
   } = useMoralis()
 
   return (
-    <div className=" h-full  w-full  ">
+    <div className=" h-screen  w-full relative   ">
+      <div className='absolute text-white bottom-2 w-full text-center'>By <h2 className=' font-bold'>KaibaDefi</h2></div>
       <div className="flex flex-row ">
         <div className="basis-6/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>

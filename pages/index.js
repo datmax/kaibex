@@ -78,7 +78,7 @@ export default function Home() {
 
   const alertHandler = () => {
     console.log('hello')
-    setAlert({})
+    setAlert({visible: false})
   }
 
   const approve = () => {
@@ -287,12 +287,12 @@ export default function Home() {
   }, [data, inputToken])
 
   const fetchOutputBalance = useMemo(() => {
-    let bal = 0
 
     if (outputToken.name == 'Ethereum') {
       getBalances({
         onSuccess: (balance) => {
-          bal = balance.balance / Math.pow(10, 18)
+          console.log(balance)
+          let bal = balance.balance / Math.pow(10, 18)
           setOutputBalance(bal.toFixed(3))
         },
 
@@ -300,15 +300,20 @@ export default function Home() {
           console.error('CULO')
         },
       })
-    } else
-      data?.filter((token) => {
-        console.log(token, inputToken)
-        console.log(token.token_address, outputToken.address)
-        if (token.token_address == outputToken.address) {
-          bal = token.balance / Math.pow(10, token.decimals)
-        }
-      })
-    setOutputBalance(bal.toFixed(3))
+    } else{
+    let bal = 0
+    data?.filter((token) => {
+      console.log(token, inputToken)
+      console.log(token.token_address, outputToken.address)
+      if (token.token_address == outputToken.address) {
+        bal = token.balance / Math.pow(10, token.decimals)
+        setOutputBalance(bal.toFixed(3))
+
+      }
+    })
+    }
+
+      
   }, [data, outputToken])
 
   const previewOutput = useEffect(() => {
@@ -462,14 +467,12 @@ export default function Home() {
         onClose={() => setOutputOpen(false)}
         onChangeToken={outputTokenHandler}
       ></Modal>
-      {alert?.visible && (
         <Toast
           visible={alert.visible}
           message={alert.message}
           type={alert.type}
           close={alertHandler}
         ></Toast>
-      )}
 
       <div className=" flex  flex-col items-center justify-center  pt-32 align-middle ">
         <Head>
@@ -558,7 +561,7 @@ export default function Home() {
               </button>
             )}
             {approved && enough && !swapping && (
-              <button className=" card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
+              <button className=" card mx-10 mt-4 rounded border-2 border-white py-2 hover:animate-pulse" onClick={swap}>
                 Swap
               </button>
             )}

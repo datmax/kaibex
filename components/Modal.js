@@ -113,14 +113,14 @@ export default function Modal({ open, onClose, tokens, onChangeToken, add }) {
                 </div>
                 <div className="flex px-4">
                   <div className="w-full">
-                    <div className="grid grid-cols-4 gap-2 ">
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-3 ">
                       {tokens.map((token) => (
                         <div
-                          className=" card flex justify-evenly cursor-pointer border-2 py-1 text-center text-white "
+                          className=" card flex justify-evenly cursor-pointer border-2 py-2 text-center text-white "
                           onClick={() => addToken(token)}
                           key={token.symbol}
                         >
-                          <img src={token.thumbnail} className="w-8 h-8" ></img> <p className='mt-1'>{token.symbol}</p> 
+                          <img src={token.thumbnail} className="w-6 h-6" ></img> <p >{token.symbol}</p> 
                         </div>
                       ))}
                     </div>
