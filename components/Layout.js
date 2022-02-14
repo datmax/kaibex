@@ -37,12 +37,12 @@ function User(props) {
     isWeb3Enabled && setSelected(Moralis.getChainId())
   }, [isWeb3Enabled])
 
-  useEffect(() =>{
-    setTimeout(() => {
-      getBalances()
+ useEffect(() => {
+   setInterval(() =>{
+     getBalances();
+   }, 5000)
   
-}, timeout);
-  })
+ }, [input]);
 
   return (
     <div>
