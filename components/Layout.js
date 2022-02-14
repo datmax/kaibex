@@ -42,7 +42,7 @@ function User(props) {
      getBalances();
    }, 5000)
   
- }, [input]);
+ }, []);
 
   return (
     <div>
