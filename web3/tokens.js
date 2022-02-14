@@ -24,6 +24,18 @@ const tokens = [
     balance: '0.000',
   },
   {
+    "address": "0x382f0160c24f5c515a19f155bac14d479433a407",
+    "name": "Klee Kai",
+    "symbol": "KLEE",
+    "decimals": "9",
+    "logo": null,
+    "logo_hash": null,
+    "thumbnail": null,
+    "block_number": "12415471",
+    "validated": 1,
+    "created_at": "2022-01-20T10:39:55.818Z"
+  },
+  {
     address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     name: 'Wrapped BTC',
     symbol: 'WBTC',

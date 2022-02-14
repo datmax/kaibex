@@ -57,6 +57,11 @@ h1 {
     0 0 0.8rem coral, 0 0 0.8rem coral, inset 0 0 0.3rem coral;
 }
 
+.card-info {
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #505cff,
+    0 0 0.8rem #505cff, 0 0 0.8rem #505cff, inset 0 0 0.3rem #505cff;
+}
+
 @keyframes flicker {
   0%,
   18%,

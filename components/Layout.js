@@ -1,7 +1,8 @@
 import { useMoralis, useNativeBalance, useChain } from 'react-moralis'
 import { useEffect, useState, useMemo } from 'react'
-import Modal from './Modal'
 import LoginModal from './LoginModal'
+import {FaStream} from "react-icons/fa"
+
 
 function SwitchToEth({ change }) {
   return (
@@ -23,11 +24,7 @@ function User(props) {
   const {
     account,
     Moralis,
-    user,
-    logout,
-    authenticate,
-    enableWeb3,
-    isInitialized,
+ 
     isAuthenticated,
     isWeb3Enabled,
   } = useMoralis(props)
@@ -44,7 +41,7 @@ function User(props) {
     <div>
       {account && (
         <p className="text-white">
-          <span className=" mr-4 md:block  ">
+        
             {selected == '0x1' ? (
               (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
             ) : (
@@ -58,11 +55,13 @@ function User(props) {
                 }
               ></SwitchToEth>
             )}
+            <span className='hidden md:inline'>
             {' | ' +
               account.slice(0, 3) +
               '...' +
               account.slice(account.length - 3, account.length)}
-          </span>
+              </span>
+          
         </p>
       )}
       {(!isAuthenticated || !account) && (
@@ -92,14 +91,22 @@ export default function Layout({ children }) {
   } = useMoralis()
 
   return (
-    <div className=" h-full  w-full ">
-      <div className="flex flex-row">
-        <div className="basis-10/12">
+    <div className=" h-full  w-full  ">
+      <div className="flex flex-row ">
+        <div className="basis-6/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>
         </div>
-        <div className="basis-2/12 pt-4 pl-4 text-lg text-white">
+        <div className="basis-5/12 pt-4 pl-4 text-lg text-white text-right">
           <User isAuthenticated={isAuthenticated}></User>
         </div>
+        <div className='hidden text-white align-baseline justify-end  pt-4 pl-4 ' >
+          <div className='relative'>
+          <FaStream size={20} className="cursor-pointer " > </FaStream>
+
+        </div>
+          </div>
+
+
       </div>
       <main>{children}</main>
     </div>

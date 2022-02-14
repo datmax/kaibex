@@ -3,14 +3,10 @@ import React, { useState, useEffect, useMemo } from 'react'
 import {
   useMoralis,
   useNativeBalance,
-  useChain,
   useERC20Balances,
   useTokenPrice,
-  useApiContract,
 } from 'react-moralis'
 
-import { FaArrowDown, FaArrowsAltV, FaEllipsisV } from 'react-icons/fa'
-import Layout from '../components/Layout'
 import Modal from '../components/Modal'
 import Toast from '../components/Toast'
 
@@ -63,6 +59,8 @@ export default function Home() {
   const [outputPrice, setOutputPrice] = useState(0)
 
   const [approved, setApproved] = useState(true)
+  const [enough, setEnough] = useState(true);
+  const [swapping, setSwapping] = useState(false);
 
   const [alert, setAlert] = useState({
     message: '',
@@ -91,12 +89,15 @@ export default function Home() {
       params: { _spender: uniswap.address, _value: bigNumber },
     })
       .then((res) => {
-        setAlert({
-          type: 'success',
-          message: 'Token approved.',
-          visible: true,
+        res.wait().then((res)=>{
+          setAlert({
+            type: 'success',
+            message: 'Token approved.',
+            visible: true,
+          })
+          setApproved(true)
         })
-        setApproved(true)
+        
       })
       .catch((err) => {
         setAlert({
@@ -154,20 +155,107 @@ export default function Home() {
     setOutput(event.target.value)
   }
 
+  const swap = () => {
+    if(inputToken != outputToken && outputToken.name ){
+      setSwapping(true)
+      console.log(BigInt(input * Math.pow(10, inputToken.decimals)))
+      console.log((output - ((output / 100) * 5)) * Math.pow(10, outputToken.decimals))
+
+      if(inputToken.name == "Ethereum"){ Moralis.executeFunction({
+        
+          abi: uniswap.abi,
+          contractAddress: uniswap.address,
+          functionName: "swapExactETHForTokensSupportingFeeOnTransferTokens",
+          params: {
+            to: account,
+            amountOutMin: 0,
+            path: [inputToken.address, outputToken.address],
+            deadline: Date.now() + 30*1000,
+          },
+          msgValue: BigInt(input * Math.pow(10, inputToken.decimals))
+        }).then((tx) => {
+          tx.wait().then((res) =>{
+            console.log(res);
+            setSwapping(false);
+            setAlert({message: "Transaction successful!", type: "success", visible: true})
+          })
+        }).catch((err)=>{
+          console.log(err);
+          setSwapping(false);
+          setAlert({message: "Transaction Failed.", type: "error", visible: true})
+        })
+        
+      }
+      if(outputToken.name == "Ethereum"){
+        Moralis.executeFunction({
+        
+          abi: uniswap.abi,
+          contractAddress: uniswap.address,
+          functionName: "swapExactTokensForETHSupportingFeeOnTransferTokens",
+          params: {
+            to: account,
+            amountIn: BigInt(input * Math.pow(10, inputToken.decimals)),
+            amountOutMin: 0,
+            path: [inputToken.address, outputToken.address],
+            deadline: Date.now() + 30*1000,
+          },
+        }).then((tx) => {
+          tx.wait().then((res) =>{
+            console.log(res);
+            setSwapping(false);
+            setAlert({message: "Transaction successful!", type: "success", visible: true})
+          })
+        }).catch((err)=>{
+          console.log(err);
+          setSwapping(false);
+          setAlert({message: "Transaction Failed.", type: "error", visible: true})
+        })
+      }
+      else if(inputToken.name ="Ethereum" && outputToken.name !="Ethereum"){
+        Moralis.executeFunction({
+        
+          abi: uniswap.abi,
+          contractAddress: uniswap.address,
+          functionName: "swapExactTokensForTokensSupportingFeeOnTransferTokens",
+          params: {
+            to: account,
+            amountIn: BigInt(input * Math.pow(10, inputToken.decimals)),
+            amountOutMin: 0,
+            path: [inputToken.address, outputToken.address],
+            deadline: Date.now() + 30*1000,
+          },
+        }).then((tx) => {
+          tx.wait().then((res) =>{
+            console.log(res);
+            setSwapping(false);
+            setAlert({message: "Transaction successful!", type: "success", visible: true})
+          })
+        }).catch((err)=>{
+          console.log(err);
+          setSwapping(false);
+          setAlert({message: "Transaction Failed.", type: "error", visible: true})
+        })
+      }
+    }
+    
+  }
+
+
   const fetchInputBalance = useMemo(() => {
-    let bal = 0
     if (inputToken.name == 'Ethereum') {
       getBalances({
         onSuccess: (balance) => {
-          bal = balance.balance / Math.pow(10, 18)
-          setInputBalance(bal.toFixed(3))
+          balance =  balance.balance / Math.pow(10, 18)
+          setInputBalance(balance.toFixed(3))
         },
 
         onError: (error) => {
           console.error('CULO')
         },
       })
-    } else
+    } else{
+      let bal = 0
+
       data?.filter((token) => {
         if (token.name == 'Ethereum') {
         } else if (token.token_address == inputToken.address) {
@@ -175,6 +263,8 @@ export default function Home() {
         }
       })
     setInputBalance(bal.toFixed(3))
+    }
+   
   }, [data, inputToken])
 
   const fetchOutputBalance = useMemo(() => {
@@ -203,6 +293,7 @@ export default function Home() {
   }, [data, outputToken])
 
   const previewOutput = useEffect(() => {
+    console.log(outputToken.name)
     if (isWeb3Enabled && inputToken.name != 'Ethereum') {
       Moralis.Web3API.token
         .getTokenAllowance({
@@ -216,6 +307,9 @@ export default function Home() {
             setApproved(false)
           } else setApproved(true)
         })
+    }
+    else{
+      setApproved(true)
     }
 
     const timer = setTimeout(() => {
@@ -247,7 +341,8 @@ export default function Home() {
               .then((res) => {
                 setInputPreview(true)
                 setInterval(() => setInputPreview(false), 500)
-                setOutput(res[1] / Math.pow(10, outputToken.decimals))
+                console.log((res[1] / Math.pow(10, outputToken.decimals)).toFixed(3));
+                setOutput((res[1] / Math.pow(10, outputToken.decimals)).toFixed(3))
               })
               .catch((err) => {
                 console.warn(err)
@@ -256,12 +351,17 @@ export default function Home() {
           .catch((err) => {
             console.log(err)
           })
+          if(input > inputBalance){
+            
+            setEnough(false)
+          }
+          else setEnough(true)
       }
     }, 500)
     return () => {
       clearTimeout(timer)
     }
-  }, [input, isWeb3Enabled, inputToken])
+  }, [input, isWeb3Enabled, inputToken, outputToken?.name])
 
   const previewInput = useEffect(() => {
     const timer = setTimeout(() => {
@@ -307,7 +407,7 @@ export default function Home() {
     return () => {
       clearTimeout(timer)
     }
-  }, [output, outputToken])
+  }, [output])
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -380,7 +480,7 @@ export default function Home() {
                 value={input}
                 onChange={inputChangeHandler}
               ></input>
-              <button className="   absolute top-1 right-1  mx-1 my-1  bg-inherit text-gray-500 hover:text-black">
+              <button onClick={()=> setInput(inputBalance)} className="absolute top-1 right-4  mx-1 my-1  bg-inherit text-gray-500 hover:text-white" >
                 MAX
               </button>
             </div>
@@ -409,10 +509,7 @@ export default function Home() {
                 value={output}
                 onChange={outputChangeHandler}
               ></input>
-              <button className="    absolute top-1 right-1  mx-1 my-1  bg-inherit text-gray-500 hover:text-black">
-                {' '}
-                MAX
-              </button>
+             
             </div>
             <div className=" basis-1/4 px-2 ">
               <button
@@ -440,9 +537,19 @@ export default function Home() {
                 Approve
               </button>
             )}
-            {approved && (
-              <button className="disabled:{!approved} card mx-10 mt-4 rounded border-2 border-white py-2">
+            {approved && enough && !swapping && (
+              <button className=" card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
                 Swap
+              </button>
+            )}
+                        { !enough && (
+              <button className="card-error card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
+                Not enough balance.
+              </button>
+            )}
+                                    { swapping && (
+              <button className="card-info card mx-10 mt-4 rounded border-2 border-white py-2" onClick={swap}>
+                Swapping...
               </button>
             )}
           </div>
