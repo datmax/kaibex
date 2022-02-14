@@ -37,6 +37,13 @@ function User(props) {
     isWeb3Enabled && setSelected(Moralis.getChainId())
   }, [isWeb3Enabled])
 
+  useEffect(() =>{
+    setTimeout(() => {
+      getBalances()
+  
+}, timeout);
+  })
+
   return (
     <div>
       {account && (
