@@ -17,14 +17,16 @@ function SwitchToEth({ change }) {
 }
 
 function User(props) {
+  
   const { getBalances, data, nativeToken, error, isLoading } =
-    useNativeBalance(props)
+    useNativeBalance()
   const { chainId, switchNetwork, chain } = useChain()
 
   const {
     account,
     Moralis,
- 
+    isWeb3EnableLoading,
+    enableWeb3,
     isAuthenticated,
     isWeb3Enabled,
   } = useMoralis(props)
@@ -33,16 +35,27 @@ function User(props) {
   const [balanceData, setBalanceData] = useState(0)
   const [selected, setSelected] = useState(chainId)
 
+  useEffect(() => {
+    const connectorId = window.localStorage.getItem('connectorId')
+
+    if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading)
+      enableWeb3({ provider: connectorId })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, isWeb3Enabled])
+
+  useEffect(() =>{
+    const timeout = setInterval(() =>{
+      getBalances()
+    },15000)
+    return () =>{
+      clearTimeout(timeout)
+    } 
+  },[account] )
+
   useMemo(() => {
     isWeb3Enabled && setSelected(Moralis.getChainId())
   }, [isWeb3Enabled])
 
- useEffect(() => {
-   setInterval(() =>{
-     getBalances();
-   }, 5000)
-  
- }, []);
 
   return (
     <div>
@@ -116,7 +129,7 @@ export default function Layout({ children }) {
 
 
       </div>
-      <main className='px-2'>{children}</main>
+      <main className='px-2'>{children }</main>
     </div>
   )
 }

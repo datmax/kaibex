@@ -29,7 +29,7 @@ export default function Home() {
     isWeb3Enabled,
     isWeb3EnableLoading,
   } = useMoralis()
-  const { fetchERC20Balances, data, wait, isFetching, err } = useERC20Balances()
+  const { fetchERC20Balances, data, isFetching, err } = useERC20Balances()
 
   const {
     fetchTokenPrice,
@@ -39,7 +39,7 @@ export default function Home() {
     priceFetching,
   } = useTokenPrice()
 
-  const { getBalances } = useNativeBalance()
+  const { getBalances, } = useNativeBalance()
 
   //TOKENS
   const [tokens, setTokens] = useState(tokenList)
@@ -84,6 +84,8 @@ export default function Home() {
       })
     }
   },[])
+
+
 
   const alertHandler = () => {
     console.log('hello')
@@ -216,6 +218,8 @@ export default function Home() {
           tx.wait().then((res) =>{
             console.log(res);
             setSwapping(false);
+            fetchERC20Balances();
+            getBalances();
             setAlert({message: "Transaction successful!", type: "success", visible: true})
           })
         }).catch((err)=>{
@@ -242,6 +246,7 @@ export default function Home() {
           tx.wait().then((res) =>{
             console.log(res);
             setSwapping(false);
+            fetchERC20Balances();
             setAlert({message: "Transaction successful!", type: "success", visible: true})
           })
         }).catch((err)=>{
@@ -267,6 +272,8 @@ export default function Home() {
           tx.wait().then((res) =>{
             console.log(res);
             setSwapping(false);
+            fetchERC20Balances();
+            getBalances();
             setAlert({message: "Transaction successful!", type: "success", visible: true})
           })
         }).catch((err)=>{
@@ -281,6 +288,7 @@ export default function Home() {
 
 
   const fetchInputBalance = useMemo(() => {
+    console.log("INPUT UPDATE!")
     if (inputToken.name == 'Ethereum') {
       getBalances({
         onSuccess: (balance) => {
@@ -327,10 +335,11 @@ export default function Home() {
       console.log(token.token_address, outputToken.address)
       if (token.token_address == outputToken.address) {
         bal = token.balance / Math.pow(10, token.decimals)
-        setOutputBalance(bal.toFixed(3))
 
       }
     })
+    setOutputBalance(bal.toFixed(3))
+
     }
 
       
@@ -402,7 +411,7 @@ export default function Home() {
           }
           else setEnough(true)
       }
-    }, 500)
+    }, 1000)
     return () => {
       clearTimeout(timer)
     }
@@ -450,7 +459,7 @@ export default function Home() {
             console.log(err)
           })
       }
-    }, 500)
+    }, 1000)
     return () => {
       clearTimeout(timer)
     }
@@ -542,9 +551,7 @@ export default function Home() {
             <div className="basis-3/4">${(inputPrice * input).toFixed(3)}</div>
             <div className="basis-1/4">Balance: {inputBalance}</div>
           </div>
-          <div className=" min-w-max items-center justify-center py-4 text-center">
-            Invert
-          </div>
+         
           <div className="  flex flex-row ">
             <div className=" card relative basis-3/4  rounded-md bg-inherit">
               <input
