@@ -9,7 +9,7 @@
 
   import farms from '../web3/farms';
 
-export default function Farm(props){
+export default function Fang(props){
 
     const linkDecimals =  18;
 
@@ -152,27 +152,27 @@ const getFarmerPools = useEffect(() => {
    const stake = () =>{}
    const reinvest = () =>{}
 
-    return(<div className="w-full  lg:w-5/6 xl:w-2/3  card-violet p-4 mt-10 bg-black bg-opacity-10 ">
+    return(<div className="w-full  lg:w-5/6 xl:w-2/3  card-blue p-4 mt-10 bg-black bg-opacity-10 ">
         <div className="grid grid-cols-1 md:grid-cols-4">
             <div className="first flex">
             <img src="https://res.cloudinary.com/mazculo/image/upload/v1645323915/kaiba-icon-white_1_vnsl0v.png" className="w-10 h-10 mr-2"  />
             <div className="title py-4"> 
-            <h2 className='text-2xl font-medium '>Stake KAIBA</h2>
+            <h2 className='text-2xl font-medium '>Stake FANG-LP</h2>
             <h2 className=" text-slate-300 ">Farm FANG</h2>
 
             </div>
             </div>
             <div className='section w-full py-4'>
             <h2 className='text-xl font-medium'  >APR</h2>
-            <h3>11%/135%</h3>
+            <h3>12%/115%</h3>
         </div>
         <div className='section w-full py-4'>
-            <h2 className='text-xl font-medium'>My staked KAIBA:</h2>
-            <h3>{staked}</h3>
+            <h2 className='text-xl font-medium'>My staked FANG-LP:</h2>
+            <h3>1200</h3>
         </div>
         <div className='section w-full py-4'>
             <h2 className='text-xl font-medium'>My earned FANG:</h2>
-            <h3>{rewards / Math.pow(10,linkDecimals) }</h3>
+            <h3>350</h3>
         </div>
 
         </div>

@@ -525,7 +525,7 @@ export default function Home() {
               <h2 className="cursor-pointer text-right text-2xl"> ...</h2>
             </div>
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row ">
             <div className=" card relative basis-3/4  rounded-md bg-inherit">
               <input
                 className="w-full bg-transparent py-2 px-2 text-white outline-none "
@@ -548,9 +548,10 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-row">
-            <div className="basis-3/4">${(inputPrice * input).toFixed(3)}</div>
-            <div className="basis-1/4">Balance: {inputBalance}</div>
+            <div className="basis-3/4 mt-2">${(inputPrice * input).toFixed(3)}</div>
+            <div className="basis-1/4 mt-2">Balance: {inputBalance}</div>
           </div>
+          <div className='py-4'></div>
          
           <div className="  flex flex-row ">
             <div className=" card relative basis-3/4  rounded-md bg-inherit">
@@ -563,7 +564,7 @@ export default function Home() {
               ></input>
              
             </div>
-            <div className=" basis-1/4 px-2 ">
+            <div className=" basis-1/4 px-2  ">
               <button
                 className="card w-full rounded-md border-2 py-2 hover:animate-pulse hover:bg-slate-800"
                 onClick={() => {
@@ -574,7 +575,7 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <div className="mb-2 flex flex-row">
+          <div className="mb-2 flex flex-rowm mt-2 ">
             <div className="basis-3/4">
               ${(outputPrice * output).toFixed(3)}
             </div>

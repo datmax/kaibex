@@ -62,7 +62,7 @@ function User(props) {
       {account && (
         <p className="text-white pt-2">
         
-            {selected == '0x1' && data?.balance ? (
+            {selected == '0x4' && data?.balance ? (
               (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
             ) : (
               <SwitchToEth

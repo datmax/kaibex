@@ -7,6 +7,7 @@ function MyApp({ Component, pageProps }) {
       appId={process.env.NEXT_PUBLIC_APP_ID}
       serverUrl={process.env.NEXT_PUBLIC_SERVER_URL}
     >
+      {console.log(process.env.NEXT_PUBLIC_APP_ID)}
       <Layout>
         <Component {...pageProps} />
       </Layout>

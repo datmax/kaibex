@@ -7,6 +7,10 @@ input {
   align-content: center;
 }
 
+img{
+  border-radius: 50%;
+}
+
 html {
   font-family: 'Poppins';
   background: hsla(188, 87%, 9%, 1);
@@ -46,20 +50,66 @@ h1 {
     0 0 82px #0fa, 0 0 92px #0fa, 0 0 10px #0fa, 0 0 15px #0fa;
 }
 
+.title{
+  text-shadow: 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 2px #0fa,
+  0 0 1px #0fa, 0 0 2px #0fa, 0 0 1px #0fa, 0 0 1px #0fa;
+}
+
 .card {
   box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #0e5e4c,
     0 0 0.8rem #0e5e4c, 0 0 0.8rem #0e5e4c, inset 0 0 0.3rem #0e5e4c;
   border-radius: 20px;
 }
 
+
+.card-violet {
+  border: 2px solid #570e5e;
+  background-color: #570e5e33;
+  
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #570e5e,
+    0 0 0.8rem #570e5e, 0 0 0.8rem #570e5e, inset 0 0 0.3rem #570e5e;
+  border-radius: 20px;
+}
+
 .card-error {
   box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem coral,
     0 0 0.8rem coral, 0 0 0.8rem coral, inset 0 0 0.3rem coral;
+  border-radius: 20px;
+
 }
 
 .card-info {
+  
   box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #505cff,
     0 0 0.8rem #505cff, 0 0 0.8rem #505cff, inset 0 0 0.3rem #505cff;
+  border-radius: 20px;
+
+}
+
+.card-blue {
+  background-color: #5297ff46;
+
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #5297ff,
+    0 0 0.8rem #5297ff, 0 0 0.8rem #5297ff, inset 0 0 0.3rem #5297ff;
+  border-radius: 20px;
+
+}
+
+.card-orangi {
+  background-color: #ffa65252;
+
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.2rem #fff, 0 0 0.1rem #ffa652,
+    0 0 0.8rem #ffa652, 0 0 0.8rem #ffa652, inset 0 0 0.3rem #ffa652;
+  border-radius: 20px;
+
+}
+
+
+
+
+
+h3{
+  font-weight: 600;
 }
 
 @keyframes flicker {
