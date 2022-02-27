@@ -1,8 +1,7 @@
 import { useMoralis, useNativeBalance, useChain } from 'react-moralis'
 import { useEffect, useState, useMemo } from 'react'
 import LoginModal from './LoginModal'
-import {FaStream} from "react-icons/fa"
-
+import { FaStream } from 'react-icons/fa'
 
 function SwitchToEth({ change }) {
   return (
@@ -17,7 +16,6 @@ function SwitchToEth({ change }) {
 }
 
 function User(props) {
-  
   const { getBalances, data, nativeToken, error, isLoading } =
     useNativeBalance()
   const { chainId, switchNetwork, chain } = useChain()
@@ -43,45 +41,42 @@ function User(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled])
 
-  useEffect(() =>{
-    const timeout = setInterval(() =>{
+  useEffect(() => {
+    const timeout = setInterval(() => {
       getBalances()
-    },15000)
-    return () =>{
+    }, 15000)
+    return () => {
       clearTimeout(timeout)
-    } 
-  },[account] )
+    }
+  }, [account])
 
   useMemo(() => {
     isWeb3Enabled && setSelected(Moralis.getChainId())
   }, [isWeb3Enabled])
 
-
   return (
     <div>
       {account && (
-        <p className="text-white pt-2">
-        
-            {selected == '0x4' && data?.balance ? (
-              (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
-            ) : (
-              <SwitchToEth
-                change={() =>
-                  switchNetwork('0x1')
-                    .then(() => {
-                      setSelected('0x1')
-                    })
-                    .catch(() => console.log('KAIBA FTW'))
-                }
-              ></SwitchToEth>
-            )}
-            <span className='hidden md:inline'>
+        <p className="pt-2 text-white">
+          {selected == '0x1' && data?.balance ? (
+            (data?.balance / Math.pow(10, 18))?.toFixed(3) + ' ETH '
+          ) : (
+            <SwitchToEth
+              change={() =>
+                switchNetwork('0x1')
+                  .then(() => {
+                    setSelected('0x1')
+                  })
+                  .catch(() => console.log('KAIBA FTW'))
+              }
+            ></SwitchToEth>
+          )}
+          <span className="hidden md:inline">
             {' | ' +
               account.slice(0, 3) +
               '...' +
               account.slice(account.length - 3, account.length)}
-              </span>
-          
+          </span>
         </p>
       )}
       {(!isAuthenticated || !account) && (
@@ -111,25 +106,26 @@ export default function Layout({ children }) {
   } = useMoralis()
 
   return (
-    <div className=" h-screen  w-full relative   ">
-      <div className='absolute text-white bottom-2 w-full text-center hidden'>By <h2 className=' font-bold'>KaibaDefi</h2></div>
+    <div className=" relative  h-screen w-full   ">
+      <div className="absolute bottom-2 hidden w-full text-center text-white">
+        By <h2 className=" font-bold">KaibaDefi</h2>
+      </div>
       <div className="flex flex-row ">
         <div className="basis-6/12">
           <h1 className=" pt-4 pl-4 text-4xl text-white">KaibEx</h1>
         </div>
-        <div className="basis-5/12 pt-4 pl-4 text-lg text-white text-right">
+        <div className="basis-5/12 pt-4 pl-4 text-right text-lg text-white">
           <User isAuthenticated={isAuthenticated}></User>
         </div>
-        <div className='hidden text-white align-baseline justify-end  pt-4 pl-4 ' >
-          <div className='relative'>
-          <FaStream size={20} className="cursor-pointer " > </FaStream>
-
-        </div>
+        <div className="hidden justify-end pt-4 pl-4  align-baseline text-white ">
+          <div className="relative">
+            <FaStream size={20} className="cursor-pointer ">
+              {' '}
+            </FaStream>
           </div>
-
-
+        </div>
       </div>
-      <main className='px-2 py-4i m'>{children }</main>
+      <main className="py-4i m px-2">{children}</main>
     </div>
   )
 }
