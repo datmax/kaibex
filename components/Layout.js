@@ -129,7 +129,7 @@ export default function Layout({ children }) {
 
 
       </div>
-      <main className='px-2'>{children }</main>
+      <main className='px-2 py-4i m'>{children }</main>
     </div>
   )
 }
